@@ -20,10 +20,36 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({
     super.key,
   });
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String _title = "Hello World";
+  final _titleController = TextEditingController();
+
+  bool _formProgress = false;
+
+  void _updateFormProgress(String value) {
+    bool progress = false;
+    if (value.isNotEmpty) {
+      progress = true;
+    }
+    setState(() {
+      _formProgress = progress;
+    });
+  }
+
+  void _changeTitle() {
+    setState(() {
+      _title = _titleController.text;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,17 +59,31 @@ class HomePage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Hello World",
+              "$_title",
               style: Theme.of(context).textTheme.headlineLarge,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                onChanged: _updateFormProgress,
+                controller: _titleController,
                 decoration: const InputDecoration(hintText: "Title"),
               ),
             ),
             TextButton(
-              onPressed: null,
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.resolveWith(
+                  (states) => states.contains(MaterialState.disabled)
+                      ? null
+                      : Theme.of(context).buttonTheme.colorScheme?.onPrimary,
+                ),
+                backgroundColor: MaterialStateProperty.resolveWith(
+                  (states) => states.contains(MaterialState.disabled)
+                      ? null
+                      : Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              onPressed: _formProgress == true ? _changeTitle : null,
               child: const Text("Change"),
             )
           ],
