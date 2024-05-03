@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage> {
     if (value.isNotEmpty) {
       progress = true;
     }
+
     setState(() {
       _formProgress = progress;
     });
@@ -48,6 +49,8 @@ class _HomePageState extends State<HomePage> {
   void _changeTitle() {
     setState(() {
       _title = _titleController.text;
+      _titleController.clear();
+      _formProgress = false;
     });
   }
 
@@ -83,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                       : Theme.of(context).colorScheme.primary,
                 ),
               ),
-              onPressed: _formProgress == true ? _changeTitle : null,
+              onPressed: _formProgress ? _changeTitle : null,
               child: const Text("Change"),
             )
           ],
